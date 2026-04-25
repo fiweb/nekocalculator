@@ -4,173 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Neko Tip Calc</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="favicon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <style>
         :root {
             --gb-screen: #8bac0f;
             --gb-dark: #0f380f;
             --gb-red: #a22633;
             --pc-bg: #1a1a1a;
-            --gb-focus: #44690a;
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            height: 100svh; 
-            background-color: var(--pc-bg);
+            margin: 0; padding: 0; width: 100%;
+            height: 100svh; background-color: var(--pc-bg);
             font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center; 
-            overflow: hidden;
-            touch-action: manipulation;
+            display: flex; justify-content: center; overflow: hidden;
         }
 
         .console-unit {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            width: 100%; height: 100%; display: flex; flex-direction: column;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- MOBILE DEFAULTS --- */
         .viewport {
             background-color: var(--gb-screen);
-            padding: 15px 25px;
-            color: var(--gb-dark);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            overflow-y: auto;
+            padding: 15px 25px; color: var(--gb-dark);
+            flex: 1; display: flex; flex-direction: column; box-sizing: border-box;
         }
-
-        .header {
-            text-align: center;
-            border-bottom: 3px solid var(--gb-dark);
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-        }
-
-        .header h1 { margin:0; letter-spacing: 2px; font-size: 1.4rem; }
 
         .result-area {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 900;
-            margin-bottom: 12px;
-            height: 110px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
-            border: 3px dashed var(--gb-dark);
-            background: rgba(0,0,0,0.05);
-            line-height: 1.1;
+            text-align: center; margin-bottom: 15px; height: 190px;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-evenly;
+            border: 4px dashed var(--gb-dark); background: rgba(0,0,0,0.05);
+            padding: 10px; box-sizing: border-box;
             white-space: pre; 
-            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.2;
+            /* Mobile cat size */
+            font-size: 1.2rem; 
         }
 
-        .input-group { display: flex; flex-direction: column; gap: 10px; }
-        .input-row label { font-weight: 900; font-size: 0.9rem; margin-bottom: 3px; display: block; }
+        .res-row { width: 100%; white-space: normal; }
+        .res-label { font-size: 0.8rem; font-weight: 900; opacity: 0.8; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .res-value { font-size: 2.0rem; font-weight: 900; }
+        
+        .divider {
+            width: 60%; height: 2px; background-color: var(--gb-dark);
+            margin: 5px auto; opacity: 0.5;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-row label { font-weight: 900; font-size: 0.85rem; margin-bottom: 3px; display: block; }
 
         input {
-            background: rgba(0,0,0,0.05);
-            border: 3px solid var(--gb-dark);
-            color: var(--gb-dark);
-            padding: 10px;
-            font-family: inherit;
-            font-size: 1.2rem; /* BIGGER: Approx 19px for readability */
-            font-weight: 900;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
+            background: rgba(0,0,0,0.05); border: 3px solid var(--gb-dark);
+            color: var(--gb-dark); padding: 10px; font-family: inherit;
+            font-size: 1.2rem; font-weight: 900; width: 100%; box-sizing: border-box; outline: none;
             border-radius: 0;
-            transition: all 0.1s ease-in-out;
-        }
-
-        /* Visual cue for accessibility: Focus State */
-        input:focus {
-            border-color: var(--gb-focus);
-            background: rgba(0,0,0,0.1);
-            transform: scale(1.02);
         }
 
         /* --- PC OVERRIDES --- */
         @media (min-width: 450px) {
-            .console-unit { 
-                width: 840px; 
-                border-left: 4px solid #333;
-                border-right: 4px solid #333;
+            .console-unit { width: 840px; border-left: 4px solid #333; border-right: 4px solid #333; }
+            .result-area { 
+                height: 250px; 
+                font-size: 2.5rem; /* THE BIG CAT FIX */
             }
-            .viewport { padding: 40px; }
-            .header { margin-bottom: 25px; padding-bottom: 15px; }
-            .header h1 { font-size: 2.2rem; }
-            .result-area { height: 160px; margin-bottom: 30px; font-size: 1.8rem; }
-            .input-group { gap: 18px; }
-            .input-row label { font-size: 1.1rem; }
-            input { padding: 15px; font-size: 1.5rem; } /* LARGE for PC users */
+            .res-value { font-size: 2.6rem; }
+            .res-label { font-size: 1rem; }
+            input { padding: 15px; font-size: 1.5rem; }
         }
 
-        /* --- CONTROLS --- */
-        .controls {
-            background: #333;
-            padding: 20px 25px;
-            display: flex;
-            gap: 20px;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
+        .controls { background: #333; padding: 20px 25px; display: flex; gap: 20px; }
         .btn {
-            flex: 1;
-            height: 75px;
-            border-radius: 12px;
-            border: none;
-            font-family: inherit;
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            -webkit-tap-highlight-color: transparent;
+            flex: 1; height: 75px; border-radius: 12px; border: none;
+            font-family: inherit; font-size: 1.4rem; font-weight: 900; color: white;
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-
         .btn-b { background: #555; border-bottom: 5px solid #222; }
         .btn-a { background: var(--gb-red); border-bottom: 5px solid #6d1822; }
         .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
-        .btn span { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
+        .btn span { font-size: 0.8rem; opacity: 0.9; }
 
-        .footer-tag {
-            text-align: center;
-            font-size: 0.75rem;
-            margin-top: auto;
-            padding-top: 10px;
-            font-weight: 900;
-            opacity: 0.7;
-        }
+        .footer-tag { text-align: center; font-size: 0.7rem; margin-top: auto; font-weight: 900; opacity: 0.6; padding-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="console-unit">
         <div class="viewport">
-            <div class="header">
-                <h1>NEKO CALC v3.9</h1>
-            </div>
-
             <div class="result-area" id="output">
  /\_/\ 
 ( o.o )
@@ -178,30 +99,17 @@
             </div>
 
             <div class="input-group">
-                <div class="input-row">
-                    <label>BILL $</label>
-                    <input type="number" id="bill" placeholder="0.00" inputmode="decimal">
-                </div>
-                <div class="input-row">
-                    <label>TIP %</label>
-                    <input type="number" id="tip" placeholder="15" inputmode="numeric">
-                </div>
-                <div class="input-row">
-                    <label>PEOPLE</label>
-                    <input type="number" id="people" placeholder="1" inputmode="numeric">
-                </div>
+                <div class="input-row"><label>BILL $</label><input type="number" id="bill" placeholder="0.00" inputmode="decimal"></div>
+                <div class="input-row"><label>TIP %</label><input type="number" id="tip" placeholder="15" inputmode="numeric"></div>
+                <div class="input-row"><label>PEOPLE</label><input type="number" id="people" placeholder="1" inputmode="numeric"></div>
             </div>
             
             <div class="footer-tag">🐾 NEKO SOFT SYSTEMS 2026</div>
         </div>
 
         <div class="controls">
-            <button class="btn btn-b" onclick="reset()">
-                B <span>RESET</span>
-            </button>
-            <button class="btn btn-a" onclick="calculate()">
-                A <span>CALC</span>
-            </button>
+            <button class="btn btn-b" onclick="reset()">B<span>RESET</span></button>
+            <button class="btn btn-a" onclick="calculate()">A<span>CALC</span></button>
         </div>
     </div>
 
@@ -213,31 +121,40 @@
         function doBlink() {
             if (isCalculating) return;
             const output = document.getElementById('output');
-            output.innerText = faceBlink;
-            setTimeout(() => {
-                if (!isCalculating) output.innerText = faceOpen;
-            }, 400); 
+            output.textContent = faceBlink;
+            setTimeout(() => { if (!isCalculating) output.textContent = faceOpen; }, 400); 
         }
 
-        setInterval(() => {
-            if (Math.random() > 0.5) doBlink();
-        }, 2000);
+        setInterval(() => { if (Math.random() > 0.5) doBlink(); }, 2500);
 
         function calculate() {
             const bill = parseFloat(document.getElementById('bill').value);
-            const tip = parseInt(document.getElementById('tip').value);
+            const tipPercent = parseFloat(document.getElementById('tip').value);
             const people = parseInt(document.getElementById('people').value);
 
-            if (isNaN(bill) || isNaN(tip) || isNaN(people) || people <= 0) {
-                document.getElementById('output').innerText = "INPUT ERROR";
+            if (isNaN(bill) || isNaN(tipPercent) || isNaN(people) || people <= 0) {
+                document.getElementById('output').textContent = "INPUT ERROR";
                 return;
             }
 
             isCalculating = true; 
-            const total = (bill + (bill * (tip / 100))) / people;
-            // Increased result text size for readability
-            document.getElementById('output').style.fontSize = "2.2rem";
-            document.getElementById('output').innerHTML = `EACH PAY:<br>$${total.toFixed(2)}`;
+            const tipTotal = bill * (tipPercent / 100);
+            const billTotal = bill + tipTotal;
+            const eachPay = billTotal / people;
+            
+            const output = document.getElementById('output');
+            output.style.whiteSpace = "normal"; 
+            output.innerHTML = `
+                <div class="res-row">
+                    <span class="res-label">Bill + Tip Total</span>
+                    <span class="res-value">$${billTotal.toFixed(2)}</span>
+                </div>
+                <div class="divider"></div>
+                <div class="res-row">
+                    <span class="res-label">Each Pays</span>
+                    <span class="res-value">$${eachPay.toFixed(2)}</span>
+                </div>
+            `;
             document.activeElement.blur(); 
         }
 
@@ -246,19 +163,16 @@
             document.getElementById('bill').value = '';
             document.getElementById('tip').value = '';
             document.getElementById('people').value = '';
-            document.getElementById('output').style.fontSize = "1.5rem";
-            document.getElementById('output').innerText = faceOpen;
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === "Enter") calculate();
+            const output = document.getElementById('output');
+            output.style.whiteSpace = "pre"; 
+            output.textContent = faceOpen;
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const inputIds = ['bill', 'tip', 'people'];
-            inputIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.addEventListener("keypress", handleKeyPress);
+            ['bill', 'tip', 'people'].forEach(id => {
+                document.getElementById(id).addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") calculate();
+                });
             });
         });
     </script>
