@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neko Tip Calc</title>
     
-    <link rel="icon" type="image/png" href="faivcon.png">
-    <link rel="apple-touch-icon" href="faivcon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <style>
@@ -65,10 +65,11 @@
 
         .result-area {
             text-align: center;
-            font-size: 2.2rem;
+            font-size: 1.6rem;
             font-weight: bold;
             margin-bottom: 30px;
-            min-height: 100px;
+            height: 140px; 
+            min-height: 140px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -76,6 +77,8 @@
             border: 3px dashed var(--gb-dark);
             background: rgba(0,0,0,0.05);
             line-height: 1.2;
+            white-space: pre; 
+            overflow: hidden;
         }
 
         .input-group {
@@ -157,11 +160,13 @@
     <div class="console-unit">
         <div class="viewport">
             <div class="header">
-                <h1 style="margin:0; letter-spacing: 3px;">NEKO CALC v2.7</h1>
+                <h1 style="margin:0; letter-spacing: 3px;">NEKO CALC v3.5</h1>
             </div>
 
             <div class="result-area" id="output">
-                READY_
+ /\_/\ 
+( o.o )
+ > ^ < 
             </div>
 
             <div class="input-group">
@@ -193,6 +198,25 @@
     </div>
 
     <script>
+        const faceOpen = " /\\_/\\ \n( o.o )\n > ^ < ";
+        const faceBlink = " /\\_/\\ \n( -.- )\n > ^ < "; 
+        let isCalculating = false;
+
+        function doBlink() {
+            if (isCalculating) return;
+            const output = document.getElementById('output');
+            output.innerText = faceBlink;
+            
+            setTimeout(() => {
+                if (!isCalculating) output.innerText = faceOpen;
+            }, 400); 
+        }
+
+        // UPDATED: Now checks every 2000ms (2 seconds)
+        setInterval(() => {
+            if (Math.random() > 0.5) doBlink();
+        }, 2000);
+
         function calculate() {
             const bill = parseFloat(document.getElementById('bill').value);
             const tip = parseInt(document.getElementById('tip').value);
@@ -203,26 +227,26 @@
                 return;
             }
 
+            isCalculating = true; 
             const total = (bill + (bill * (tip / 100))) / people;
+            document.getElementById('output').style.fontSize = "2.2rem";
             document.getElementById('output').innerHTML = `EACH PAY:<br>$${total.toFixed(2)}`;
             document.activeElement.blur(); 
         }
 
         function reset() {
+            isCalculating = false; 
             document.getElementById('bill').value = '';
             document.getElementById('tip').value = '';
             document.getElementById('people').value = '';
-            document.getElementById('output').innerText = 'READY_';
+            document.getElementById('output').style.fontSize = "1.6rem";
+            document.getElementById('output').innerText = faceOpen;
         }
 
-        // Handle Enter Key logic
         function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                calculate();
-            }
+            if (event.key === "Enter") calculate();
         }
 
-        // Attach listeners
         document.addEventListener("DOMContentLoaded", () => {
             const inputIds = ['bill', 'tip', 'people'];
             inputIds.forEach(id => {
