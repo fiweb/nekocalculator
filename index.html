@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Neko Tip Calc</title>
     
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
         :root {
@@ -21,12 +22,14 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
+            height: 100svh; 
             background-color: var(--pc-bg);
             font-family: 'Courier New', Courier, monospace;
             display: flex;
             justify-content: center; 
             overflow: hidden;
+            touch-action: manipulation;
         }
 
         .console-unit {
@@ -34,20 +37,14 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        @media (min-width: 450px) {
-            .console-unit { 
-                width: 840px; 
-                border-left: 4px solid #333;
-                border-right: 4px solid #333;
-                box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            }
-        }
-
+        /* --- MOBILE DEFAULTS (Tighter) --- */
         .viewport {
             background-color: var(--gb-screen);
-            padding: 30px;
+            padding: 20px 25px; /* Tighter for mobile */
             color: var(--gb-dark);
             flex: 1;
             display: flex;
@@ -59,17 +56,18 @@
         .header {
             text-align: center;
             border-bottom: 3px solid var(--gb-dark);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
+
+        .header h1 { margin:0; letter-spacing: 2px; font-size: 1.5rem; }
 
         .result-area {
             text-align: center;
             font-size: 1.6rem;
             font-weight: bold;
-            margin-bottom: 30px;
-            height: 140px; 
-            min-height: 140px;
+            margin-bottom: 20px;
+            height: 130px; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -81,28 +79,14 @@
             overflow: hidden;
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .input-row { display: flex; flex-direction: column; }
-
-        label {
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
+        .input-group { display: flex; flex-direction: column; gap: 12px; }
         input {
             background: transparent;
             border: 3px solid var(--gb-dark);
             color: var(--gb-dark);
-            padding: 12px;
+            padding: 10px;
             font-family: inherit;
-            font-size: 1.3rem;
+            font-size: 16px; 
             font-weight: bold;
             outline: none;
             width: 100%;
@@ -110,9 +94,26 @@
             border-radius: 0;
         }
 
+        /* --- PC / TABLET OVERRIDES (Roomy) --- */
+        @media (min-width: 450px) {
+            .console-unit { 
+                width: 840px; 
+                border-left: 4px solid #333;
+                border-right: 4px solid #333;
+                box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            }
+            .viewport { padding: 40px; } /* Roomy original padding */
+            .header { margin-bottom: 30px; padding-bottom: 15px; }
+            .header h1 { font-size: 2rem; letter-spacing: 4px; }
+            .result-area { height: 160px; margin-bottom: 35px; }
+            .input-group { gap: 20px; }
+            input { padding: 15px; font-size: 1.4rem; }
+        }
+
+        /* --- CONTROLS --- */
         .controls {
             background: #333;
-            padding: 25px;
+            padding: 20px 25px;
             display: flex;
             gap: 20px;
             box-sizing: border-box;
@@ -121,7 +122,7 @@
 
         .btn {
             flex: 1;
-            height: 70px;
+            height: 75px;
             border-radius: 12px;
             border: none;
             font-family: inherit;
@@ -133,23 +134,19 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-b { background: #555; border-bottom: 5px solid #222; }
         .btn-a { background: var(--gb-red); border-bottom: 5px solid #6d1822; }
-
-        .btn:active {
-            transform: translateY(3px);
-            border-bottom-width: 2px;
-        }
-
+        .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
         .btn span { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
 
         .footer-tag {
             text-align: center;
             font-size: 0.8rem;
             margin-top: auto;
-            padding-top: 20px;
+            padding-top: 15px;
             font-weight: bold;
             opacity: 0.6;
         }
@@ -160,7 +157,7 @@
     <div class="console-unit">
         <div class="viewport">
             <div class="header">
-                <h1 style="margin:0; letter-spacing: 3px;">NEKO CALC v3.5</h1>
+                <h1 id="title-text">NEKO CALC v3.7</h1>
             </div>
 
             <div class="result-area" id="output">
@@ -171,15 +168,15 @@
 
             <div class="input-group">
                 <div class="input-row">
-                    <label>BILL $</label>
+                    <label style="font-weight:bold; font-size:0.8rem;">BILL $</label>
                     <input type="number" id="bill" placeholder="0.00" inputmode="decimal">
                 </div>
                 <div class="input-row">
-                    <label>TIP %</label>
+                    <label style="font-weight:bold; font-size:0.8rem;">TIP %</label>
                     <input type="number" id="tip" placeholder="15" inputmode="numeric">
                 </div>
                 <div class="input-row">
-                    <label>PEOPLE</label>
+                    <label style="font-weight:bold; font-size:0.8rem;">PEOPLE</label>
                     <input type="number" id="people" placeholder="1" inputmode="numeric">
                 </div>
             </div>
@@ -206,13 +203,11 @@
             if (isCalculating) return;
             const output = document.getElementById('output');
             output.innerText = faceBlink;
-            
             setTimeout(() => {
                 if (!isCalculating) output.innerText = faceOpen;
             }, 400); 
         }
 
-        // UPDATED: Now checks every 2000ms (2 seconds)
         setInterval(() => {
             if (Math.random() > 0.5) doBlink();
         }, 2000);
