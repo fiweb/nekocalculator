@@ -3,217 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neko Tip Calculator</title>
+    <title>Neko Tip Calc</title>
     
-    <link rel="icon" type="image/png" href="HREF_TO_YOUR_CAT_ICON">
-    <link rel="apple-touch-icon" href="HREF_TO_YOUR_CAT_ICON">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <style>
         :root {
-            --gb-gray: #9ca0a8;
-            --gb-dark-gray: #7a7d83;
             --gb-screen: #8bac0f;
             --gb-dark: #0f380f;
             --gb-red: #a22633;
-            --gb-blue: #2d318b;
+            --pc-bg: #1a1a1a;
         }
 
-        body {
-            background-color: #222;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--pc-bg);
             font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center; 
             overflow: hidden;
         }
 
-        /* Handheld Body */
-        .gameboy {
-            background: var(--gb-gray);
-            width: 320px;
-            height: 520px;
-            border-radius: 10px 10px 60px 10px;
-            box-shadow: inset -10px -10px 0px rgba(0,0,0,0.1), 15px 15px 0px #111;
-            padding: 20px;
+        /* Unit fills 100% height as requested */
+        .console-unit {
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            position: relative;
         }
 
-        /* Screen Surround */
-        .screen-container {
-            background: #3d3d3d;
-            width: 280px;
-            height: 240px;
-            border-radius: 10px 10px 45px 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-            border: 2px solid #222;
+        @media (min-width: 450px) {
+            .console-unit { 
+                width: 840px; 
+                border-left: 4px solid #333;
+                border-right: 4px solid #333;
+                box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            }
         }
 
-        /* The "LCD" */
-        .screen {
-            background: var(--gb-screen);
-            width: 80%;
-            height: 80%;
-            padding: 15px;
+        /* Screen Area */
+        .viewport {
+            background-color: var(--gb-screen);
+            padding: 30px;
             color: var(--gb-dark);
+            flex: 1; /* Grows to take available space */
             display: flex;
             flex-direction: column;
-            box-shadow: inset 3px 3px 10px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            overflow-y: auto; /* Allows scrolling if inputs overflow */
         }
 
-        .title { 
-            font-size: 14px; 
-            margin: 0 0 10px 0; 
-            text-align: center; 
-            border-bottom: 2px solid var(--gb-dark);
-            letter-spacing: 1px;
-        }
-
-        .display {
-            font-size: 1.1rem;
-            font-weight: bold;
+        .header {
             text-align: center;
-            margin: 10px 0;
-            min-height: 45px;
+            border-bottom: 3px solid var(--gb-dark);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .result-area {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            border: 3px dashed var(--gb-dark);
+            background: rgba(0,0,0,0.05);
             line-height: 1.2;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-row { display: flex; flex-direction: column; }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 5px;
             text-transform: uppercase;
         }
 
-        .inputs {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
         input {
-            background: rgba(0,0,0,0.05);
-            border: 1px solid var(--gb-dark);
+            background: transparent;
+            border: 3px solid var(--gb-dark);
             color: var(--gb-dark);
-            width: 90%;
-            padding: 4px;
+            padding: 12px;
             font-family: inherit;
+            font-size: 1.3rem;
             font-weight: bold;
             outline: none;
-        }
-
-        /* Controls */
-        .controls {
-            display: flex;
             width: 100%;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 50px;
-            padding: 0 10px;
+            box-sizing: border-box;
         }
 
-        /* D-Pad Placeholder */
-        .d-pad {
-            width: 80px;
-            height: 80px;
+        /* Control Bar - Flush with Viewport */
+        .controls {
             background: #333;
-            position: relative;
-            clip-path: polygon(35% 0%, 65% 0%, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0% 65%, 0% 35%, 35% 35%);
-        }
-
-        .action-buttons {
+            padding: 25px;
             display: flex;
-            gap: 15px;
-            transform: rotate(-25deg);
-        }
-
-        .btn-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            gap: 20px;
+            box-sizing: border-box;
+            width: 100%;
         }
 
         .btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            flex: 1;
+            height: 70px;
+            border-radius: 12px;
             border: none;
-            cursor: pointer;
-            box-shadow: 2px 4px 0px #555;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: rgba(255,255,255,0.5);
+            font-family: inherit;
+            font-size: 1.4rem;
             font-weight: bold;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-a { background: var(--gb-red); }
-        .btn-b { background: var(--gb-red); }
+        .btn-b { background: #555; border-bottom: 5px solid #222; }
+        .btn-a { background: var(--gb-red); border-bottom: 5px solid #6d1822; }
 
         .btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: none;
+            transform: translateY(3px);
+            border-bottom-width: 2px;
         }
 
-        .label {
-            margin-top: 8px;
-            font-size: 10px;
-            color: var(--gb-blue);
+        .btn span { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
+
+        .footer-tag {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: auto;
+            padding-top: 20px;
             font-weight: bold;
-            transform: rotate(25deg);
-        }
-
-        /* Bottom Buttons */
-        .start-select {
-            display: flex;
-            gap: 20px;
-            margin-top: 40px;
-            transform: rotate(-25deg);
-        }
-
-        .small-btn {
-            width: 40px;
-            height: 10px;
-            background: #777;
-            border-radius: 10px;
-            box-shadow: 2px 2px 0px #555;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
-    <div class="gameboy">
-        <div class="screen-container">
-            <div class="screen">
-                <div class="title">NEKO-CALC v1.0</div>
-                <div class="display" id="output">ENTER BILL_</div>
-                <div class="inputs">
-                    <input type="number" id="bill" placeholder="TOTAL $">
-                    <input type="number" id="tip" placeholder="TIP %">
-                    <input type="number" id="people" placeholder="PEOPLE">
+    <div class="console-unit">
+        <div class="viewport">
+            <div class="header">
+                <h1 style="margin:0; letter-spacing: 3px;">NEKO CALC v2.6</h1>
+            </div>
+
+            <div class="result-area" id="output">
+                READY_
+            </div>
+
+            <div class="input-group">
+                <div class="input-row">
+                    <label>BILL $</label>
+                    <input type="number" id="bill" placeholder="0.00" inputmode="decimal">
+                </div>
+                <div class="input-row">
+                    <label>TIP %</label>
+                    <input type="number" id="tip" placeholder="15" inputmode="numeric">
+                </div>
+                <div class="input-row">
+                    <label>PEOPLE</label>
+                    <input type="number" id="people" placeholder="1" inputmode="numeric">
                 </div>
             </div>
-        </div>
-        
-        <div class="controls">
-            <div class="d-pad"></div>
-            <div class="action-buttons">
-                <div class="btn-wrap">
-                    <button class="btn btn-b" onclick="reset()">B</button>
-                    <span class="label">RESET</span>
-                </div>
-                <div class="btn-wrap">
-                    <button class="btn btn-a" onclick="calculate()">A</button>
-                    <span class="label">CALC</span>
-                </div>
-            </div>
+            
+            <div class="footer-tag">🐾 NEKO SOFT SYSTEMS 2026</div>
         </div>
 
-        <div class="start-select">
-            <div class="small-btn"></div>
-            <div class="small-btn"></div>
+        <div class="controls">
+            <button class="btn btn-b" onclick="reset()">
+                B <span>RESET</span>
+            </button>
+            <button class="btn btn-a" onclick="calculate()">
+                A <span>CALC</span>
+            </button>
         </div>
     </div>
 
@@ -223,28 +200,21 @@
             const tip = parseInt(document.getElementById('tip').value);
             const people = parseInt(document.getElementById('people').value);
 
-            // Validation logic
             if (isNaN(bill) || isNaN(tip) || isNaN(people) || people <= 0) {
                 document.getElementById('output').innerText = "INPUT ERROR";
                 return;
             }
 
-            // Calculation logic
-            const tipToPercent = tip / 100;
-            const totalTip = bill * tipToPercent;
-            const totalBill = bill + totalTip;
-            const billPerPerson = totalBill / people;
-            const finalAmount = billPerPerson.toFixed(2);
-
-            // UI Update
-            document.getElementById('output').innerText = `EACH PAY:\n$${finalAmount}`;
+            const total = (bill + (bill * (tip / 100))) / people;
+            document.getElementById('output').innerHTML = `EACH PAY:<br>$${total.toFixed(2)}`;
+            document.activeElement.blur(); 
         }
 
         function reset() {
             document.getElementById('bill').value = '';
             document.getElementById('tip').value = '';
             document.getElementById('people').value = '';
-            document.getElementById('output').innerText = 'ENTER BILL_';
+            document.getElementById('output').innerText = 'READY_';
         }
     </script>
 </body>
