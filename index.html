@@ -29,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* Unit fills 100% height as requested */
         .console-unit {
             width: 100%;
             height: 100%;
@@ -46,16 +45,15 @@
             }
         }
 
-        /* Screen Area */
         .viewport {
             background-color: var(--gb-screen);
             padding: 30px;
             color: var(--gb-dark);
-            flex: 1; /* Grows to take available space */
+            flex: 1;
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
-            overflow-y: auto; /* Allows scrolling if inputs overflow */
+            overflow-y: auto;
         }
 
         .header {
@@ -106,9 +104,9 @@
             outline: none;
             width: 100%;
             box-sizing: border-box;
+            border-radius: 0;
         }
 
-        /* Control Bar - Flush with Viewport */
         .controls {
             background: #333;
             padding: 25px;
@@ -159,7 +157,7 @@
     <div class="console-unit">
         <div class="viewport">
             <div class="header">
-                <h1 style="margin:0; letter-spacing: 3px;">NEKO CALC v2.6</h1>
+                <h1 style="margin:0; letter-spacing: 3px;">NEKO CALC v2.7</h1>
             </div>
 
             <div class="result-area" id="output">
@@ -216,6 +214,22 @@
             document.getElementById('people').value = '';
             document.getElementById('output').innerText = 'READY_';
         }
+
+        // Handle Enter Key logic
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                calculate();
+            }
+        }
+
+        // Attach listeners
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputIds = ['bill', 'tip', 'people'];
+            inputIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener("keypress", handleKeyPress);
+            });
+        });
     </script>
 </body>
 </html>
