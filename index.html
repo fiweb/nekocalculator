@@ -16,6 +16,7 @@
             --gb-dark: #0f380f;
             --gb-red: #a22633;
             --pc-bg: #1a1a1a;
+            --gb-focus: #44690a;
         }
 
         body, html {
@@ -41,10 +42,10 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- MOBILE DEFAULTS (Tighter) --- */
+        /* --- MOBILE DEFAULTS --- */
         .viewport {
             background-color: var(--gb-screen);
-            padding: 20px 25px; /* Tighter for mobile */
+            padding: 15px 25px;
             color: var(--gb-dark);
             flex: 1;
             display: flex;
@@ -56,58 +57,68 @@
         .header {
             text-align: center;
             border-bottom: 3px solid var(--gb-dark);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
         }
 
-        .header h1 { margin:0; letter-spacing: 2px; font-size: 1.5rem; }
+        .header h1 { margin:0; letter-spacing: 2px; font-size: 1.4rem; }
 
         .result-area {
             text-align: center;
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            height: 130px; 
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+            height: 110px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-transform: uppercase;
             border: 3px dashed var(--gb-dark);
             background: rgba(0,0,0,0.05);
-            line-height: 1.2;
+            line-height: 1.1;
             white-space: pre; 
             overflow: hidden;
         }
 
-        .input-group { display: flex; flex-direction: column; gap: 12px; }
+        .input-group { display: flex; flex-direction: column; gap: 10px; }
+        .input-row label { font-weight: 900; font-size: 0.9rem; margin-bottom: 3px; display: block; }
+
         input {
-            background: transparent;
+            background: rgba(0,0,0,0.05);
             border: 3px solid var(--gb-dark);
             color: var(--gb-dark);
             padding: 10px;
             font-family: inherit;
-            font-size: 16px; 
-            font-weight: bold;
+            font-size: 1.2rem; /* BIGGER: Approx 19px for readability */
+            font-weight: 900;
             outline: none;
             width: 100%;
             box-sizing: border-box;
             border-radius: 0;
+            transition: all 0.1s ease-in-out;
         }
 
-        /* --- PC / TABLET OVERRIDES (Roomy) --- */
+        /* Visual cue for accessibility: Focus State */
+        input:focus {
+            border-color: var(--gb-focus);
+            background: rgba(0,0,0,0.1);
+            transform: scale(1.02);
+        }
+
+        /* --- PC OVERRIDES --- */
         @media (min-width: 450px) {
             .console-unit { 
                 width: 840px; 
                 border-left: 4px solid #333;
                 border-right: 4px solid #333;
-                box-shadow: 0 0 50px rgba(0,0,0,0.8);
             }
-            .viewport { padding: 40px; } /* Roomy original padding */
-            .header { margin-bottom: 30px; padding-bottom: 15px; }
-            .header h1 { font-size: 2rem; letter-spacing: 4px; }
-            .result-area { height: 160px; margin-bottom: 35px; }
-            .input-group { gap: 20px; }
-            input { padding: 15px; font-size: 1.4rem; }
+            .viewport { padding: 40px; }
+            .header { margin-bottom: 25px; padding-bottom: 15px; }
+            .header h1 { font-size: 2.2rem; }
+            .result-area { height: 160px; margin-bottom: 30px; font-size: 1.8rem; }
+            .input-group { gap: 18px; }
+            .input-row label { font-size: 1.1rem; }
+            input { padding: 15px; font-size: 1.5rem; } /* LARGE for PC users */
         }
 
         /* --- CONTROLS --- */
@@ -127,7 +138,7 @@
             border: none;
             font-family: inherit;
             font-size: 1.4rem;
-            font-weight: bold;
+            font-weight: 900;
             color: white;
             cursor: pointer;
             display: flex;
@@ -140,15 +151,15 @@
         .btn-b { background: #555; border-bottom: 5px solid #222; }
         .btn-a { background: var(--gb-red); border-bottom: 5px solid #6d1822; }
         .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
-        .btn span { font-size: 0.8rem; opacity: 0.8; margin-top: 2px; }
+        .btn span { font-size: 0.8rem; opacity: 0.9; margin-top: 2px; }
 
         .footer-tag {
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-top: auto;
-            padding-top: 15px;
-            font-weight: bold;
-            opacity: 0.6;
+            padding-top: 10px;
+            font-weight: 900;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -157,7 +168,7 @@
     <div class="console-unit">
         <div class="viewport">
             <div class="header">
-                <h1 id="title-text">NEKO CALC v3.7</h1>
+                <h1>NEKO CALC v3.9</h1>
             </div>
 
             <div class="result-area" id="output">
@@ -168,15 +179,15 @@
 
             <div class="input-group">
                 <div class="input-row">
-                    <label style="font-weight:bold; font-size:0.8rem;">BILL $</label>
+                    <label>BILL $</label>
                     <input type="number" id="bill" placeholder="0.00" inputmode="decimal">
                 </div>
                 <div class="input-row">
-                    <label style="font-weight:bold; font-size:0.8rem;">TIP %</label>
+                    <label>TIP %</label>
                     <input type="number" id="tip" placeholder="15" inputmode="numeric">
                 </div>
                 <div class="input-row">
-                    <label style="font-weight:bold; font-size:0.8rem;">PEOPLE</label>
+                    <label>PEOPLE</label>
                     <input type="number" id="people" placeholder="1" inputmode="numeric">
                 </div>
             </div>
@@ -224,6 +235,7 @@
 
             isCalculating = true; 
             const total = (bill + (bill * (tip / 100))) / people;
+            // Increased result text size for readability
             document.getElementById('output').style.fontSize = "2.2rem";
             document.getElementById('output').innerHTML = `EACH PAY:<br>$${total.toFixed(2)}`;
             document.activeElement.blur(); 
@@ -234,7 +246,7 @@
             document.getElementById('bill').value = '';
             document.getElementById('tip').value = '';
             document.getElementById('people').value = '';
-            document.getElementById('output').style.fontSize = "1.6rem";
+            document.getElementById('output').style.fontSize = "1.5rem";
             document.getElementById('output').innerText = faceOpen;
         }
 
