@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="faivcon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <style>
         :root {
             --gb-screen: #8bac0f;
@@ -20,7 +20,8 @@
 
         body, html {
             margin: 0; padding: 0; width: 100%;
-            height: 100svh; background-color: var(--pc-bg);
+            height: 100svh; /* Keeps buttons above iPhone toolbars */
+            background-color: var(--pc-bg);
             font-family: 'Courier New', Courier, monospace;
             display: flex; justify-content: center; overflow: hidden;
         }
@@ -31,85 +32,79 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- PC ONLY HEADER --- */
         .pc-header {
-            display: none; /* Hidden on mobile */
-            text-align: center;
-            font-weight: 900;
-            color: var(--gb-dark);
-            border-bottom: 2px solid var(--gb-dark);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
+            display: none; text-align: center; font-weight: 900; color: var(--gb-dark);
+            border-bottom: 2px solid var(--gb-dark); padding-bottom: 8px;
+            margin-bottom: 10px; letter-spacing: 2px;
         }
 
         .viewport {
             background-color: var(--gb-screen);
-            padding: 15px 25px; color: var(--gb-dark);
+            padding: 10px 20px; color: var(--gb-dark);
             flex: 1; display: flex; flex-direction: column; box-sizing: border-box;
         }
 
         .result-area {
-            text-align: center; margin-bottom: 15px; height: 190px;
+            text-align: center; margin-bottom: 12px; height: 170px;
             display: flex; flex-direction: column; align-items: center; justify-content: space-evenly;
             border: 4px dashed var(--gb-dark); background: rgba(0,0,0,0.05);
-            padding: 10px; box-sizing: border-box;
+            padding: 5px; box-sizing: border-box;
             font-family: 'Courier New', Courier, monospace;
-            font-weight: 900;
-            line-height: 1; 
-            font-size: 1.2rem;
-            overflow: hidden;
+            line-height: 1; font-size: 1.1rem; overflow: hidden;
         }
 
         .cat-container { white-space: pre; display: block; margin: 0; padding: 0; }
-        .res-row { width: 100%; white-space: normal; line-height: 1.2; }
-        .res-label { font-size: 0.8rem; font-weight: 900; opacity: 0.8; text-transform: uppercase; display: block; margin-bottom: 2px; }
-        .res-value { font-size: 2.0rem; font-weight: 900; }
+        .res-row { width: 100%; white-space: normal; line-height: 1.1; }
+        .res-label { font-size: 0.65rem; font-weight: 900; opacity: 0.8; text-transform: uppercase; display: block; }
+        .res-value { font-size: 1.5rem; font-weight: 900; }
         
-        .divider { width: 60%; height: 2px; background-color: var(--gb-dark); margin: 5px auto; opacity: 0.5; }
+        .divider { width: 70%; height: 2px; background-color: var(--gb-dark); margin: 2px auto; opacity: 0.4; }
 
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
-        .input-row label { font-weight: 900; font-size: 0.85rem; margin-bottom: 3px; display: block; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        .input-row label { font-weight: 900; font-size: 0.8rem; margin-bottom: 2px; display: block; }
 
+        /* --- UPDATED CHUNKY INPUTS --- */
         input {
             background: rgba(0,0,0,0.05); border: 3px solid var(--gb-dark);
-            color: var(--gb-dark); padding: 10px; font-family: inherit;
-            font-size: 1.2rem; font-weight: 900; width: 100%; box-sizing: border-box; outline: none;
+            color: var(--gb-dark); 
+            padding: 12px 10px; /* Increased height via padding */
+            font-family: inherit;
+            font-size: 1.5rem; /* Larger font size within input */
+            font-weight: 900; 
+            width: 100%; box-sizing: border-box; outline: none;
             border-radius: 0;
+            appearance: none; /* Removes iOS default styling */
         }
 
-        /* --- PC OVERRIDES --- */
         @media (min-width: 450px) {
             .console-unit { width: 840px; border-left: 4px solid #333; border-right: 4px solid #333; }
-            .pc-header { 
-                display: block; /* Show only on PC */
-                font-size: 1.8rem; 
-            }
-            .result-area { height: 250px; font-size: 2.5rem; }
-            .res-value { font-size: 2.6rem; }
+            .pc-header { display: block; font-size: 1.8rem; }
+            .result-area { height: 260px; font-size: 2.5rem; }
+            .res-value { font-size: 2.2rem; }
             .res-label { font-size: 1rem; }
-            input { padding: 15px; font-size: 1.5rem; }
+            input { padding: 18px 15px; font-size: 2rem; }
         }
 
-        .controls { background: #333; padding: 20px 25px; display: flex; gap: 20px; }
+        .controls { background: #333; padding: 15px 20px; display: flex; gap: 15px; }
         .btn {
             flex: 1; height: 75px; border-radius: 12px; border: none;
             font-family: inherit; font-size: 1.4rem; font-weight: 900; color: white;
             cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
         .btn-b { background: #555; border-bottom: 5px solid #222; }
         .btn-a { background: var(--gb-red); border-bottom: 5px solid #6d1822; }
         .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
-        .btn span { font-size: 0.8rem; opacity: 0.9; }
+        .btn span { font-size: 0.7rem; opacity: 0.9; }
 
-        .footer-tag { text-align: center; font-size: 0.7rem; margin-top: auto; font-weight: 900; opacity: 0.6; padding-top: 10px; }
+        .footer-tag { text-align: center; font-size: 0.65rem; margin-top: auto; font-weight: 900; opacity: 0.6; padding-top: 5px; }
     </style>
 </head>
 <body>
 
     <div class="console-unit">
         <div class="viewport">
-            <div class="pc-header">NEKO CALC v4.9</div>
+            <div class="pc-header">NEKO CALC v4.9.5</div>
 
             <div class="result-area" id="output">
                 <span class="cat-container"> /\_/\ 
@@ -166,8 +161,13 @@
             const output = document.getElementById('output');
             output.innerHTML = `
                 <div class="res-row">
-                    <span class="res-label">Bill + Tip Total</span>
+                    <span class="res-label">Total</span>
                     <span class="res-value">$${billTotal.toFixed(2)}</span>
+                </div>
+                <div class="divider"></div>
+                <div class="res-row">
+                    <span class="res-label">Tip Amount</span>
+                    <span class="res-value">$${tipTotal.toFixed(2)}</span>
                 </div>
                 <div class="divider"></div>
                 <div class="res-row">
